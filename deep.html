@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery Vidéo Moderne</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .video-thumbnail {
+            aspect-ratio: 1/1;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-12">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">Gallery Vidéo Moderne</h1>
+            <p class="text-gray-600 max-w-2xl mx-auto">Découvrez notre sélection de vidéos avec ces miniatures stylisées</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Miniature Style 1 - Classique avec overlay -->
+            <div class="video-thumbnail rounded-xl overflow-hidden shadow-lg relative group">
+                <div class="relative w-full aspect-square bg-gradient-to-r from-blue-500 to-purple-600">
+                    <img src="https://images.unsplash.com/photo-1574717024453-354f3982f110?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" 
+                         alt="Miniature vidéo" 
+                         class="w-full h-full object-cover opacity-90 group-hover:opacity-70 transition-opacity">
+                    <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+                        <div class="play-button bg-white bg-opacity-90 rounded-full w-12 h-12 flex items-center justify-center text-purple-600">
+                            <i class="fas fa-play text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-4">
+                    <h3 class="font-semibold text-gray-800 mb-1">Tutoriel Débutant</h3>
+                    <p class="text-sm text-gray-500">15 min • 12K vues</p>
+                    <div class="flex items-center mt-2">
+                        <div class="w-6 h-6 rounded-full bg-gray-300 mr-2"></div>
+                        <span class="text-xs text-gray-600">Académie Vidéo</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Miniature Style 2 - Minimaliste -->
+            <div class="video-thumbnail bg-white rounded-xl overflow-hidden shadow-lg">
+                <div class="relative w-full aspect-square bg-gray-200">
+                    <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80" 
+                         alt="Miniature vidéo" 
+                         class="w-full h-full object-cover">
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
+                        <span class="text-white text-sm font-medium">12:45</span>
+                    </div>
+                </div>
+                <div class="p-4">
+                    <h3 class="font-medium text-gray-800 mb-1">Voyage en Islande</h3>
+                    <p class="text-xs text-gray-500 mb-2">Explorez les paysages époustouflants de l'Islande</p>
+                    <div class="flex justify-between items-center text-xs text-gray-400">
+                        <span>2.4K vues</span>
+                        <span>3 jours</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Miniature Style 3 - Style carte avec badge -->
+            <div class="video-thumbnail bg-white rounded-xl overflow-hidden shadow-lg relative">
+                <div class="absolute top-3 right-3 bg-red-500 text-white text-xs px-2 py-1 rounded-full z-10">
+                    LIVE
+                </div>
+                <div class="relative w-full aspect-square">
+                    <img src="https://images.unsplash.com/photo-1559703248-d769b85a3929?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" 
+                         alt="Miniature vidéo" 
+                         class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all"></div>
+                </div>
+                <div class="p-4">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 mr-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-300"></div>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-1">Concert en direct</h3>
+                            <p class="text-sm text-gray-500">Artiste Principal</p>
+                            <div class="flex items-center mt-1 text-xs text-gray-400">
+                                <span class="mr-2">1.2K spectateurs</span>
+                                <span class="flex items-center">
+                                    <i class="fas fa-music mr-1"></i>
+                                    Pop
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Miniature Style 4 - Style liste horizontale -->
+            <div class="video-thumbnail bg-white rounded-xl overflow-hidden shadow-lg flex flex-col md:flex-row h-full">
+                <div class="w-full md:w-2/5 aspect-square relative">
+                    <img src="https://images.unsplash.com/photo-1542626991-cbc4e32524cc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1169&q=80" 
+                         alt="Miniature vidéo" 
+                         class="w-full h-full object-cover">
+                    <div class="absolute bottom-2 right-2 bg-black bg-opacity-70 text-white text-xs px-1 rounded">
+                        08:32
+                    </div>
+                </div>
+                <div class="w-full md:w-3/5 p-3 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-medium text-gray-800 text-sm mb-1">Recette rapide : Pâtes Carbonara</h3>
+                        <p class="text-xs text-gray-500 line-clamp-2">Découvrez comment préparer des pâtes carbonara parfaites en moins de 20 minutes avec cette recette facile.</p>
+                    </div>
+                    <div class="flex items-center justify-between mt-2">
+                        <div class="flex items-center">
+                            <div class="w-6 h-6 rounded-full bg-gray-300 mr-2"></div>
+                            <span class="text-xs text-gray-600">Chef Marie</span>
+                        </div>
+                        <div class="text-xs text-gray-400 flex items-center">
+                            <i class="fas fa-eye mr-1"></i>
+                            <span>5.7K</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-16 text-center text-gray-500 text-sm">
+            <p>© 2023 Gallery Vidéo Moderne. Tous droits réservés.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Simulation de clic sur les miniatures
+        document.querySelectorAll('.video-thumbnail').forEach(thumbnail => {
+            thumbnail.addEventListener('click', () => {
+                alert('Lecture de la vidéo sélectionnée!');
+            });
+        });
+    </script>
+</body>
+</html>
