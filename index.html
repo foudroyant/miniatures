@@ -6,38 +6,41 @@
   <title>Miniatures de projets</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 p-6">
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+<body class="bg-gray-100 p-0 m-0">
+  <div class="w-screen h-screen relative">
 
     <!-- Miniature 1 -->
-    <div class="relative rounded-xl shadow-lg overflow-hidden bg-cover bg-center h-60" id="miniature1"
-         style="background-image: url('./fun-3d-cartoon-illustration-indian-businessman.jpg'); background-position: center;">
+    <div class="miniature absolute inset-0 flex items-center justify-center transition-all duration-300"
+         id="miniature1"
+         style="background-image: url('./fun-3d-cartoon-illustration-indian-businessman.jpg'); background-size: cover; background-position: center;">
       <div class="absolute inset-0 bg-black/40"></div>
       <div class="absolute inset-0 backdrop-blur-sm"></div>
       <div class="relative z-10 flex flex-col justify-center items-center h-full text-white text-center">
-        <h2 class="text-lg font-bold leading-tight text-center w-full title">Deux, trois ou quatre mots<br>puis la suite</h2>
-        <p class="text-sm mt-1 text-center w-full subtitle">Un sous titre de la publication</p>
+        <h2 class="title text-3xl md:text-5xl font-bold leading-tight text-center w-full">Deux, trois ou quatre mots<br>puis la suite</h2>
+        <p class="subtitle text-xl md:text-2xl mt-4 text-center w-full">Un sous titre de la publication</p>
       </div>
       <span class="absolute bottom-4 left-4 text-xs bg-blue-600 text-white px-2 py-1 rounded-full">Bambyno</span>
     </div>
 
     <!-- Miniature 2 -->
-    <div id="miniature2" class="relative rounded-xl shadow-lg overflow-hidden bg-indigo-500 h-60">
+    <div class="miniature absolute inset-0 flex items-center justify-center transition-all duration-300 bg-indigo-500"
+         id="miniature2">
       <div class="relative flex flex-col justify-center items-center h-full text-white text-center">
-        <h2 class="text-lg font-bold leading-tight text-center w-full title">UX Redesign of IPDC<br>Pending review</h2>
-        <p class="text-sm mt-1 text-center w-full subtitle">21 Sep 2020</p>
+        <h2 class="title text-3xl md:text-5xl font-bold leading-tight text-center w-full">UX Redesign of IPDC<br>Pending review</h2>
+        <p class="subtitle text-xl md:text-2xl mt-4 text-center w-full">21 Sep 2020</p>
       </div>
       <span class="absolute bottom-4 left-4 text-xs bg-yellow-500 text-black px-2 py-1 rounded-full">Bambyno - Automatisation AI</span>
     </div>
 
     <!-- Miniature 3 -->
-    <div id="miniature3" class="relative rounded-xl shadow-lg overflow-hidden bg-cover bg-center h-60"
-         style="background-image: url('./images/76824.jpg');">
+    <div class="miniature absolute inset-0 flex items-center justify-center transition-all duration-300"
+         id="miniature3"
+         style="background-image: url('./images/76824.jpg'); background-size: cover; background-position: center;">
       <div class="absolute inset-0 bg-black/40"></div>
       <div class="absolute inset-0 backdrop-blur-sm"></div>
       <div class="relative z-10 flex flex-col justify-center items-center h-full text-white text-center">
-        <h2 class="text-lg font-bold leading-tight text-center w-full title">Branding & Assets<br>for company</h2>
-        <p class="text-sm mt-1 text-center w-full subtitle">21 Sep 2020</p>
+        <h2 class="title text-3xl md:text-5xl font-bold leading-tight text-center w-full">Branding & Assets<br>for company</h2>
+        <p class="subtitle text-xl md:text-2xl mt-4 text-center w-full">21 Sep 2020</p>
       </div>
       <span class="absolute bottom-4 left-4 text-xs bg-green-600 text-white px-2 py-1 rounded-full">Bambyno - Developpeur FullStack</span>
     </div>
@@ -47,11 +50,18 @@
   // Récupère les paramètres de l'URL
   const params = new URLSearchParams(window.location.search);
 
-  // Exemple : ?title1=Mon%20titre&sous1=Mon%20sous-titre
-  const title = params.get('title');
-  const subtitle = params.get('subtitle');
+  // Gère l'affichage de la miniature selon le paramètre "miniature"
+  const miniatureId = params.get('miniature') || 'miniature1';
+  document.querySelectorAll('.miniature').forEach(div => {
+    if (div.id === miniatureId) {
+      div.classList.remove('hidden');
+    } else {
+      div.classList.add('hidden');
+    }
+  });
 
   // Modifie tous les éléments avec la classe .title
+  const title = params.get('title');
   if (title) {
     document.querySelectorAll('.title').forEach(el => {
       el.innerHTML = title;
@@ -59,13 +69,12 @@
   }
 
   // Modifie tous les éléments avec la classe .subtitle
+  const subtitle = params.get('subtitle');
   if (subtitle) {
     document.querySelectorAll('.subtitle').forEach(el => {
       el.innerHTML = subtitle;
     });
   }
 </script>
-
-
 </body>
 </html>

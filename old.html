@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Miniatures de projets</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+    <!-- Miniature 1 -->
+    <div class="relative rounded-xl shadow-lg overflow-hidden bg-cover bg-center h-60" id="miniature1"
+         style="background-image: url('./fun-3d-cartoon-illustration-indian-businessman.jpg'); background-position: center;">
+      <div class="absolute inset-0 bg-black/40"></div>
+      <div class="absolute inset-0 backdrop-blur-sm"></div>
+      <div class="relative z-10 flex flex-col justify-center items-center h-full text-white text-center">
+        <h2 class="text-lg font-bold leading-tight text-center w-full title">Deux, trois ou quatre mots<br>puis la suite</h2>
+        <p class="text-sm mt-1 text-center w-full subtitle">Un sous titre de la publication</p>
+      </div>
+      <span class="absolute bottom-4 left-4 text-xs bg-blue-600 text-white px-2 py-1 rounded-full">Bambyno</span>
+    </div>
+
+    <!-- Miniature 2 -->
+    <div id="miniature2" class="relative rounded-xl shadow-lg overflow-hidden bg-indigo-500 h-60">
+      <div class="relative flex flex-col justify-center items-center h-full text-white text-center">
+        <h2 class="text-lg font-bold leading-tight text-center w-full title">UX Redesign of IPDC<br>Pending review</h2>
+        <p class="text-sm mt-1 text-center w-full subtitle">21 Sep 2020</p>
+      </div>
+      <span class="absolute bottom-4 left-4 text-xs bg-yellow-500 text-black px-2 py-1 rounded-full">Bambyno - Automatisation AI</span>
+    </div>
+
+    <!-- Miniature 3 -->
+    <div id="miniature3" class="relative rounded-xl shadow-lg overflow-hidden bg-cover bg-center h-60"
+         style="background-image: url('./images/76824.jpg');">
+      <div class="absolute inset-0 bg-black/40"></div>
+      <div class="absolute inset-0 backdrop-blur-sm"></div>
+      <div class="relative z-10 flex flex-col justify-center items-center h-full text-white text-center">
+        <h2 class="text-lg font-bold leading-tight text-center w-full title">Branding & Assets<br>for company</h2>
+        <p class="text-sm mt-1 text-center w-full subtitle">21 Sep 2020</p>
+      </div>
+      <span class="absolute bottom-4 left-4 text-xs bg-green-600 text-white px-2 py-1 rounded-full">Bambyno - Developpeur FullStack</span>
+    </div>
+
+  </div>
+<script>
+  // Récupère les paramètres de l'URL
+  const params = new URLSearchParams(window.location.search);
+
+  // Exemple : ?title1=Mon%20titre&sous1=Mon%20sous-titre
+  const title = params.get('title');
+  const subtitle = params.get('subtitle');
+
+  // Modifie tous les éléments avec la classe .title
+  if (title) {
+    document.querySelectorAll('.title').forEach(el => {
+      el.innerHTML = title;
+    });
+  }
+
+  // Modifie tous les éléments avec la classe .subtitle
+  if (subtitle) {
+    document.querySelectorAll('.subtitle').forEach(el => {
+      el.innerHTML = subtitle;
+    });
+  }
+</script>
+
+
+</body>
+</html>
