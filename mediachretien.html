@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Miniatures de projets</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-0 m-0">
+  <div class="w-screen h-screen relative">
+
+    <!-- Miniature 1 -->
+    <div class="miniature absolute inset-0 flex items-center justify-center transition-all duration-300"
+         id="miniature1"
+         style="background-image: url('./images/priere.jpg'); background-size: cover; background-position: center;">
+      <div class="absolute inset-0 bg-black/40"></div>
+      <div class="absolute inset-0 backdrop-blur-sm"></div>
+      <div class="relative z-10 flex flex-col justify-center items-center h-full text-white text-center pl-20 pr-20">
+        <h2 class="title text-3xl md:text-5xl font-bold leading-tight text-center w-full">Deux, trois ou quatre mots<br>puis la suite</h2>
+        <p class="subtitle text-xl md:text-2xl mt-4 text-center w-full">Un sous titre de la publication</p>
+      </div>
+      <span class="absolute bottom-4 left-4 text-xl bg-blue-600 text-white px-2 py-1 rounded-full footer">Bambyno</span>
+    </div>
+
+    <!-- Miniature 2 -->
+    <div class="miniature absolute inset-0 flex items-center justify-center transition-all duration-300 bg-indigo-500"
+         id="miniature2">
+      <div class="relative flex flex-col justify-center items-center h-full text-white text-center">
+        <h2 class="title text-3xl md:text-5xl font-bold leading-tight text-center w-full">UX Redesign of IPDC<br>Pending review</h2>
+        <p class="subtitle text-xl md:text-2xl mt-4 text-center w-full">21 Sep 2020</p>
+      </div>
+      <span class="absolute bottom-4 left-4 text-xm bg-yellow-500 text-black px-2 py-1 rounded-full footer">Bambyno - Automatisation AI</span>
+    </div>
+
+    <!-- Miniature 3 -->
+    <div class="miniature absolute inset-0 flex items-center justify-center transition-all duration-300"
+         id="miniature3"
+         style="background-image: url('./images/76824.jpg'); background-size: cover; background-position: center;">
+      <div class="absolute inset-0 bg-black/40"></div>
+      <div class="absolute inset-0 backdrop-blur-sm"></div>
+      <div class="relative z-10 flex flex-col justify-center items-center h-full text-white text-center">
+        <h2 class="title text-3xl md:text-5xl font-bold leading-tight text-center w-full">Branding & Assets<br>for company</h2>
+        <p class="subtitle text-xl md:text-2xl mt-4 text-center w-full">21 Sep 2020</p>
+      </div>
+      <span class="absolute bottom-4 left-4 text-xm bg-green-600 text-white px-2 py-1 rounded-full footer">Bambyno - Developpeur FullStack</span>
+    </div>
+
+  </div>
+<script>
+  // Récupère les paramètres de l'URL
+  const params = new URLSearchParams(window.location.search);
+
+  // Gère l'affichage de la miniature selon le paramètre "miniature"
+  const miniatureId = params.get('miniature') || 'miniature1';
+  const img_bg = params.get("img_bg") || './images/priere.jpg'
+  const footer = params.get("footer") || 'Media Chrétien +242 06 483 76 37'
+  
+  document.querySelectorAll('.miniature').forEach(div => {
+    if (div.id === miniatureId) {
+      div.classList.remove('hidden');
+    } else {
+      div.classList.add('hidden');
+    }
+  });
+
+  // Modifie tous les éléments avec la classe .title
+  const title = params.get('title');
+  if (title) {
+    document.querySelectorAll('.title').forEach(el => {
+      el.innerHTML = title;
+    });
+  }
+
+  // Modifie tous les éléments avec la classe .subtitle
+  const subtitle = params.get('subtitle');
+  if (subtitle) {
+    document.querySelectorAll('.subtitle').forEach(el => {
+      el.innerHTML = couperEtJustifier(subtitle, 2);
+    });
+  }
+
+   // Modifie tous les éléments avec la classe .footer
+  if (footer) {
+    document.querySelectorAll('.footer').forEach(el => {
+      el.innerHTML = footer;
+    });
+  }
+
+  function couperEtJustifier(texte, lignesVoulues) {
+    const mots = texte.split(" ");
+    
+    function couper(n) {
+        let motsParLigne = Math.ceil(mots.length / n);
+        let resultat = "";
+        let index = 0;
+        
+        for (let i = 0; i < n; i++) {
+            let ligneMots = mots.slice(index, index + motsParLigne);
+            resultat += ligneMots.join(" ") + "<br>";
+            index += motsParLigne;
+        }
+        return resultat.trim();
+    }
+
+    function scoreEquilibre(texteCoupe) {
+        const lignes = texteCoupe.replace(/<br>/g, "\n").split("\n");
+        const longueurs = lignes.map(l => l.trim().length);
+        const min = Math.min(...longueurs);
+        const max = Math.max(...longueurs);
+        return max - min; // plus petit = plus équilibré
+    }
+
+    let options = [
+        couper(lignesVoulues - 1),
+        couper(lignesVoulues),
+        couper(lignesVoulues + 1)
+    ];
+
+    // Choisir la version la plus équilibrée
+    let meilleur = options.reduce((best, current) => {
+        return scoreEquilibre(current) < scoreEquilibre(best) ? current : best;
+    });
+
+    return meilleur;
+}
+</script>
+</body>
+</html>
