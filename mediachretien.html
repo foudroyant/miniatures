@@ -67,7 +67,7 @@
   const title = params.get('title');
   if (title) {
     document.querySelectorAll('.title').forEach(el => {
-      el.innerHTML = couperEtJustifier(title, 2);
+      el.innerHTML = title;
     });
   }
 
@@ -83,7 +83,7 @@
   const subtitle = params.get('subtitle');
   if (subtitle) {
     document.querySelectorAll('.subtitle').forEach(el => {
-      el.innerHTML = couperEtJustifier(subtitle, 2);
+      el.innerHTML = subtitle;
     });
   }
 
