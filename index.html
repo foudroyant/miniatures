@@ -64,7 +64,7 @@
   const title = params.get('title');
   if (title) {
     document.querySelectorAll('.title').forEach(el => {
-      el.innerHTML = title;
+      el.innerHTML = couperEtJustifier(title, 1);
     });
   }
 
@@ -72,9 +72,47 @@
   const subtitle = params.get('subtitle');
   if (subtitle) {
     document.querySelectorAll('.subtitle').forEach(el => {
-      el.innerHTML = subtitle;
+      el.innerHTML = couperEtJustifier(subtitle, 2);
     });
   }
+
+  function couperEtJustifier(texte, lignesVoulues) {
+    const mots = texte.split(" ");
+    
+    function couper(n) {
+        let motsParLigne = Math.ceil(mots.length / n);
+        let resultat = "";
+        let index = 0;
+        
+        for (let i = 0; i < n; i++) {
+            let ligneMots = mots.slice(index, index + motsParLigne);
+            resultat += ligneMots.join(" ") + "<br>";
+            index += motsParLigne;
+        }
+        return resultat.trim();
+    }
+
+    function scoreEquilibre(texteCoupe) {
+        const lignes = texteCoupe.replace(/<br>/g, "\n").split("\n");
+        const longueurs = lignes.map(l => l.trim().length);
+        const min = Math.min(...longueurs);
+        const max = Math.max(...longueurs);
+        return max - min; // plus petit = plus équilibré
+    }
+
+    let options = [
+        couper(lignesVoulues - 1),
+        couper(lignesVoulues),
+        couper(lignesVoulues + 1)
+    ];
+
+    // Choisir la version la plus équilibrée
+    let meilleur = options.reduce((best, current) => {
+        return scoreEquilibre(current) < scoreEquilibre(best) ? current : best;
+    });
+
+    return meilleur;
+}
 </script>
 </body>
 </html>
