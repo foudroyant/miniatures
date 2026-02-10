@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cotation - Créateur de Citations</title>
+    <title>Cotation - Capture Exacte</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -31,26 +31,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        body { background-color: #f3f4f6; color: #1f2937; }
+        body { background-color: #f3f4f6; color: #1f2937; overflow: hidden; }
         
-        /* Gestion de l'affichage Mobile/Desktop */
-        /* Sur Desktop, tout est visible côte à côte */
-        
-        /* Sur Mobile : Sidebar fixe en premier plan par défaut */
-        #sidebar {
-            transition: transform 0.3s ease-in-out;
-        }
+        /* Gestion affichage Mobile */
+        #sidebar { transition: transform 0.3s ease-in-out; }
+        #main-preview { transition: opacity 0.3s ease-in-out; }
 
-        /* Sur Mobile : Main (Aperçu) caché par défaut */
-        #main-preview {
-            transition: opacity 0.3s ease-in-out;
-        }
-
-        /* Classes utilitaires pour le toggle JS */
-        .mobile-hidden { display: none !important; }
-        .mobile-visible { display: flex !important; }
-
-        /* Card Style */
+        /* IMPORTANT: Pas de transform: scale ici. On laisse le CSS gérer le responsive naturellement */
         #quote-card {
             width: 100%;
             height: 100%;
@@ -73,23 +60,17 @@
         #toast.show { visibility: visible; opacity: 1; bottom: 50px; }
     </style>
 </head>
-<body class="h-screen w-full overflow-hidden flex relative">
+<body class="h-screen w-full flex relative">
 
     <!-- SIDEBAR (Éditeur) -->
-    <!-- Mobile: Fixed full screen / Desktop: Relative sidebar -->
     <aside id="sidebar" class="w-full md:w-80 lg:w-96 bg-white border-r border-gray-200 flex flex-col h-full z-30 md:z-20 absolute md:relative shadow-xl md:shadow-none">
-        
-        <!-- Header Sidebar -->
         <div class="p-5 border-b border-gray-100 flex justify-between items-center">
             <h1 class="text-xl font-serif font-bold text-gray-800 flex items-center gap-2">
                 <i class="fa-solid fa-quote-left text-brand-500"></i> Cotation
             </h1>
-            <!-- Bouton fermer (Uniquement si on voulait une modal, mais ici on alterne) -->
         </div>
 
-        <!-- Formulaire (Scrollable) -->
         <div class="flex-1 overflow-y-auto p-5 space-y-6 pb-24 md:pb-5">
-            
             <!-- Ratio -->
             <div>
                 <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Format</label>
@@ -144,7 +125,7 @@
             </div>
         </div>
 
-        <!-- Footer Sidebar Mobile UNIQUEMENT -->
+        <!-- Footer Mobile -->
         <div class="md:hidden p-5 border-t border-gray-200 bg-gray-50 absolute bottom-0 w-full z-40">
             <button onclick="showPreview()" class="w-full bg-brand-600 hover:bg-brand-500 text-white font-bold py-3 px-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
                 <i class="fa-solid fa-eye"></i> Voir l'aperçu
@@ -152,11 +133,10 @@
         </div>
     </aside>
 
-    <!-- MAIN PREVIEW (Aperçu) -->
-    <!-- Mobile: Hidden by default / Desktop: Visible -->
+    <!-- MAIN PREVIEW -->
     <main id="main-preview" class="flex-1 relative flex flex-col items-center justify-center bg-gray-200 p-4 md:p-10 overflow-hidden hidden md:flex w-full h-full">
         
-        <!-- Header Retour (Mobile Only) -->
+        <!-- Header Mobile -->
         <div class="absolute top-0 left-0 w-full p-4 flex justify-between items-center md:hidden z-10">
             <button onclick="showEditor()" class="bg-white/90 backdrop-blur text-gray-700 px-4 py-2 rounded-full shadow-md font-bold text-sm flex items-center gap-2">
                 <i class="fa-solid fa-arrow-left"></i> Modifier
@@ -166,8 +146,9 @@
             </span>
         </div>
 
-        <!-- Conteneur Card -->
-        <div id="preview-container" class="relative w-full max-w-[500px] aspect-square shadow-2xl rounded-2xl overflow-hidden bg-white transition-all duration-300 my-10 md:my-0">
+        <!-- CONTAINER A CAPTURER -->
+        <!-- C'est cet élément qui sera capturé tel quel -->
+        <div id="preview-container" class="relative w-full max-w-[500px] aspect-square shadow-2xl rounded-2xl overflow-hidden bg-white transition-all duration-300 my-10 md:my-0 bg-white">
             
             <div id="quote-card">
                 <!-- Déco -->
@@ -198,17 +179,17 @@
             </div>
         </div>
 
-        <!-- Footer Download (Mobile Only - Flottant) -->
+        <!-- Bouton Télécharger Mobile -->
         <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 md:hidden z-20 w-11/12">
-            <button id="btn-download-mobile" onclick="downloadHD()" class="w-full bg-gray-900 hover:bg-black text-white font-bold py-3 px-4 rounded-xl shadow-2xl flex items-center justify-center gap-2 transition-transform active:scale-95">
-                <i class="fa-solid fa-download"></i> Télécharger l'image HD
+            <button id="btn-download" class="w-full bg-gray-900 hover:bg-black text-white font-bold py-3 px-4 rounded-xl shadow-2xl flex items-center justify-center gap-2 transition-transform active:scale-95">
+                <i class="fa-solid fa-camera"></i> Capturer & Télécharger
             </button>
         </div>
 
-        <!-- Footer Download (Desktop Only - Caché sur mobile car on a celui du dessus) -->
+        <!-- Bouton Télécharger Desktop -->
         <div class="hidden md:block absolute top-4 right-4">
-            <button onclick="downloadHD()" class="bg-white hover:bg-gray-50 text-gray-800 font-bold py-2 px-4 rounded-lg shadow-md border border-gray-200 flex items-center gap-2 text-sm transition-all">
-                <i class="fa-solid fa-download"></i> Télécharger
+            <button id="btn-download-desktop" class="bg-white hover:bg-gray-50 text-gray-800 font-bold py-2 px-4 rounded-lg shadow-md border border-gray-200 flex items-center gap-2 text-sm transition-all">
+                <i class="fa-solid fa-download"></i> Télécharger (HD)
             </button>
         </div>
     </main>
@@ -218,8 +199,7 @@
     <script>
         // --- Configuration ---
         const CONFIG = {
-            exportWidth: 1080,
-            storageKey: 'cotation_v3'
+            storageKey: 'cotation_v4'
         };
 
         let state = {
@@ -252,14 +232,14 @@
                 image: document.getElementById('display-image'),
                 placeholder: document.getElementById('image-placeholder'),
                 card: document.getElementById('quote-card'),
-                container: document.getElementById('preview-container')
+                container: document.getElementById('preview-container') // C'est ce qu'on capture
             },
             controls: {
                 removeImg: document.getElementById('btn-remove-image'),
-                downloadMobile: document.getElementById('btn-download-mobile'),
                 ratio11: document.getElementById('ratio-1-1'),
                 ratio916: document.getElementById('ratio-9-16'),
-                themes: document.querySelectorAll('#theme-selector button')
+                themes: document.querySelectorAll('#theme-selector button'),
+                downloadBtns: document.querySelectorAll('#btn-download, #btn-download-desktop')
             },
             toast: document.getElementById('toast')
         };
@@ -269,15 +249,13 @@
             bindEvents();
             render();
             
-            // Check Mobile View State
             if(window.innerWidth < 768) {
-                showEditor(); // Default to editor on mobile
+                showEditor(); 
             }
         });
 
         // --- Navigation Mobile ---
         function showPreview() {
-            // Sur mobile, on cache la sidebar et montre le main
             if (window.innerWidth < 768) {
                 els.sidebar.classList.add('hidden');
                 els.main.classList.remove('hidden');
@@ -286,7 +264,6 @@
         }
 
         function showEditor() {
-            // Sur mobile, on cache le main et montre la sidebar
             if (window.innerWidth < 768) {
                 els.main.classList.add('hidden');
                 els.main.classList.remove('flex');
@@ -313,6 +290,11 @@
 
             els.controls.themes.forEach(btn => {
                 btn.addEventListener('click', () => applyTheme(btn));
+            });
+
+            // Attacher la fonction de téléchargement aux deux boutons
+            els.controls.downloadBtns.forEach(btn => {
+                btn.onclick = captureAndDownload;
             });
         }
 
@@ -417,38 +399,28 @@
             reader.readAsDataURL(file);
         }
 
-        async function downloadHD() {
-            const btn = window.innerWidth < 768 ? els.controls.downloadMobile : document.querySelector('button[onclick="downloadHD()"]');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Génération...`;
-            btn.disabled = true;
+        // --- FONCTION DE CAPTURE DIRECTE (WYSIWYG) ---
+        async function captureAndDownload() {
+            const btns = els.controls.downloadBtns;
+            const originalTexts = btns.map(b => b.innerHTML);
+            
+            // Loader state
+            btns.forEach(b => {
+                b.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Capture...`;
+                b.disabled = true;
+            });
 
             try {
-                const width = CONFIG.exportWidth;
-                const height = state.ratio === '1:1' ? width : Math.round(width * (16/9));
+                // On cible directement le conteneur visible
+                const elementToCapture = els.displays.container;
 
-                const exportContainer = document.createElement('div');
-                exportContainer.style.position = 'fixed';
-                exportContainer.style.top = '-9999px';
-                exportContainer.style.left = '-9999px';
-                exportContainer.style.width = width + 'px';
-                exportContainer.style.height = height + 'px';
-                exportContainer.style.fontSize = '42px'; 
-                exportContainer.style.zIndex = '9999';
-
-                const clone = els.displays.card.cloneNode(true);
-                clone.style.width = '100%';
-                clone.style.height = '100%';
-                
-                const style = document.createElement('style');
-                style.innerHTML = `.export-fix * { border-width: 3px !important; } .export-fix i { font-size: 1em !important; }`;
-                clone.classList.add('export-fix');
-
-                exportContainer.appendChild(clone);
-                document.body.appendChild(exportContainer);
-
-                const canvas = await html2canvas(exportContainer, {
-                    scale: 1, useCORS: true, backgroundColor: null, logging: false
+                // On utilise un scale élevé (4x) pour avoir une bonne qualité
+                // même si l'élément à l'écran est petit (ex: 350px sur mobile -> 1400px en sortie)
+                const canvas = await html2canvas(elementToCapture, {
+                    scale: 4, 
+                    useCORS: true,
+                    backgroundColor: null,
+                    logging: false
                 });
 
                 const link = document.createElement('a');
@@ -456,15 +428,17 @@
                 link.href = canvas.toDataURL('image/png');
                 link.click();
 
-                document.body.removeChild(exportContainer);
-                showToast("Téléchargement HD terminé !");
+                showToast("Image téléchargée !");
 
             } catch (err) {
                 console.error(err);
-                showToast("Erreur lors de l'export.");
+                showToast("Erreur lors de la capture.");
             } finally {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
+                // Restore buttons
+                btns.forEach((b, index) => {
+                    b.innerHTML = originalTexts[index];
+                    b.disabled = false;
+                });
             }
         }
 
