@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotation - Créateur de Citations</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body { background-color: #f3f4f6; color: #1f2937; }
+        
+        /* Gestion de l'affichage Mobile/Desktop */
+        /* Sur Desktop, tout est visible côte à côte */
+        
+        /* Sur Mobile : Sidebar fixe en premier plan par défaut */
+        #sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* Sur Mobile : Main (Aperçu) caché par défaut */
+        #main-preview {
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        /* Classes utilitaires pour le toggle JS */
+        .mobile-hidden { display: none !important; }
+        .mobile-visible { display: flex !important; }
+
+        /* Card Style */
+        #quote-card {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            transition: background 0.3s ease;
+        }
+
+        input[type="file"] { display: none; }
+
+        #toast {
+            visibility: hidden; min-width: 250px; background-color: #333; color: #fff;
+            text-align: center; border-radius: 8px; padding: 16px; position: fixed;
+            z-index: 50; left: 50%; bottom: 30px; transform: translateX(-50%);
+            opacity: 0; transition: opacity 0.3s;
+        }
+        #toast.show { visibility: visible; opacity: 1; bottom: 50px; }
+    </style>
+</head>
+<body class="h-screen w-full overflow-hidden flex relative">
+
+    <!-- SIDEBAR (Éditeur) -->
+    <!-- Mobile: Fixed full screen / Desktop: Relative sidebar -->
+    <aside id="sidebar" class="w-full md:w-80 lg:w-96 bg-white border-r border-gray-200 flex flex-col h-full z-30 md:z-20 absolute md:relative shadow-xl md:shadow-none">
+        
+        <!-- Header Sidebar -->
+        <div class="p-5 border-b border-gray-100 flex justify-between items-center">
+            <h1 class="text-xl font-serif font-bold text-gray-800 flex items-center gap-2">
+                <i class="fa-solid fa-quote-left text-brand-500"></i> Cotation
+            </h1>
+            <!-- Bouton fermer (Uniquement si on voulait une modal, mais ici on alterne) -->
+        </div>
+
+        <!-- Formulaire (Scrollable) -->
+        <div class="flex-1 overflow-y-auto p-5 space-y-6 pb-24 md:pb-5">
+            
+            <!-- Ratio -->
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Format</label>
+                <div class="grid grid-cols-2 gap-2 bg-gray-100 p-1 rounded-lg">
+                    <button id="ratio-1-1" class="py-2 rounded-md text-xs font-bold transition-colors bg-white shadow-sm text-gray-900" onclick="setRatio('1:1')">1:1 (Carré)</button>
+                    <button id="ratio-9-16" class="py-2 rounded-md text-xs font-bold transition-colors text-gray-500 hover:text-gray-900" onclick="setRatio('9:16')">9:16 (Story)</button>
+                </div>
+            </div>
+
+            <!-- Texte -->
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Citation</label>
+                    <textarea id="input-quote" rows="3" class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none resize-none text-sm bg-gray-50 focus:bg-white transition-colors" placeholder="Votre citation ici..."></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Auteur</label>
+                        <input type="text" id="input-author" class="w-full p-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none text-sm" placeholder="Nom">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Fonction</label>
+                        <input type="text" id="input-role" class="w-full p-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none text-sm" placeholder="Titre">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Image -->
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Photo</label>
+                <div class="flex gap-2">
+                    <label class="flex-1 cursor-pointer bg-gray-50 border border-gray-200 hover:border-brand-500 hover:bg-brand-50 text-gray-600 py-2.5 rounded-xl transition-all text-xs font-semibold text-center flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-upload"></i> Uploader
+                        <input type="file" id="input-image" accept="image/*">
+                    </label>
+                    <button id="btn-remove-image" class="px-3 bg-red-50 text-red-500 rounded-xl hover:bg-red-100 hidden transition-colors">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Thème -->
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Style</label>
+                <div class="flex gap-3 flex-wrap" id="theme-selector">
+                    <button class="w-8 h-8 rounded-full bg-white border border-gray-300 ring-2 ring-brand-500 ring-offset-1" data-bg="white" data-text="gray-900"></button>
+                    <button class="w-8 h-8 rounded-full bg-slate-900 border border-transparent" data-bg="slate-900" data-text="white"></button>
+                    <button class="w-8 h-8 rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 border border-transparent" data-bg="gradient-purple" data-text="white"></button>
+                    <button class="w-8 h-8 rounded-full bg-gradient-to-br from-orange-400 to-rose-500 border border-transparent" data-bg="gradient-sunset" data-text="white"></button>
+                    <button class="w-8 h-8 rounded-full bg-stone-100 border border-transparent" data-bg="stone-100" data-text="stone-900"></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Sidebar Mobile UNIQUEMENT -->
+        <div class="md:hidden p-5 border-t border-gray-200 bg-gray-50 absolute bottom-0 w-full z-40">
+            <button onclick="showPreview()" class="w-full bg-brand-600 hover:bg-brand-500 text-white font-bold py-3 px-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
+                <i class="fa-solid fa-eye"></i> Voir l'aperçu
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN PREVIEW (Aperçu) -->
+    <!-- Mobile: Hidden by default / Desktop: Visible -->
+    <main id="main-preview" class="flex-1 relative flex flex-col items-center justify-center bg-gray-200 p-4 md:p-10 overflow-hidden hidden md:flex w-full h-full">
+        
+        <!-- Header Retour (Mobile Only) -->
+        <div class="absolute top-0 left-0 w-full p-4 flex justify-between items-center md:hidden z-10">
+            <button onclick="showEditor()" class="bg-white/90 backdrop-blur text-gray-700 px-4 py-2 rounded-full shadow-md font-bold text-sm flex items-center gap-2">
+                <i class="fa-solid fa-arrow-left"></i> Modifier
+            </button>
+            <span class="bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-mono text-gray-500 shadow-sm">
+                Aperçu
+            </span>
+        </div>
+
+        <!-- Conteneur Card -->
+        <div id="preview-container" class="relative w-full max-w-[500px] aspect-square shadow-2xl rounded-2xl overflow-hidden bg-white transition-all duration-300 my-10 md:my-0">
+            
+            <div id="quote-card">
+                <!-- Déco -->
+                <div class="absolute top-0 right-0 p-8 opacity-10 pointer-events-none mix-blend-overlay">
+                    <i class="fa-solid fa-quote-right text-8xl md:text-9xl"></i>
+                </div>
+
+                <!-- Contenu -->
+                <div class="relative z-10 flex-1 flex flex-col justify-center p-8 md:p-12">
+                    <p id="display-quote" class="font-serif text-2xl md:text-4xl leading-tight font-medium break-words">
+                        <!-- Texte -->
+                    </p>
+                </div>
+
+                <!-- Footer -->
+                <div class="relative z-10 p-6 md:p-8 flex items-center gap-4 md:gap-6 mt-auto bg-black/5 backdrop-blur-sm">
+                    <div class="relative w-16 h-16 md:w-20 md:h-20 flex-shrink-0 rounded-full overflow-hidden bg-gray-300 border-2 border-white/50 shadow-md">
+                        <img id="display-image" src="" class="w-full h-full object-cover hidden">
+                        <div id="image-placeholder" class="absolute inset-0 flex items-center justify-center text-gray-400">
+                            <i class="fa-solid fa-user text-2xl"></i>
+                        </div>
+                    </div>
+                    <div class="flex flex-col overflow-hidden">
+                        <span id="display-author" class="text-lg md:text-xl font-bold font-sans uppercase truncate leading-tight">Auteur</span>
+                        <span id="display-role" class="text-sm md:text-base font-sans opacity-80 truncate">Fonction</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Download (Mobile Only - Flottant) -->
+        <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 md:hidden z-20 w-11/12">
+            <button id="btn-download-mobile" onclick="downloadHD()" class="w-full bg-gray-900 hover:bg-black text-white font-bold py-3 px-4 rounded-xl shadow-2xl flex items-center justify-center gap-2 transition-transform active:scale-95">
+                <i class="fa-solid fa-download"></i> Télécharger l'image HD
+            </button>
+        </div>
+
+        <!-- Footer Download (Desktop Only - Caché sur mobile car on a celui du dessus) -->
+        <div class="hidden md:block absolute top-4 right-4">
+            <button onclick="downloadHD()" class="bg-white hover:bg-gray-50 text-gray-800 font-bold py-2 px-4 rounded-lg shadow-md border border-gray-200 flex items-center gap-2 text-sm transition-all">
+                <i class="fa-solid fa-download"></i> Télécharger
+            </button>
+        </div>
+    </main>
+
+    <div id="toast">Notification</div>
+
+    <script>
+        // --- Configuration ---
+        const CONFIG = {
+            exportWidth: 1080,
+            storageKey: 'cotation_v3'
+        };
+
+        let state = {
+            quote: "Le design n'est pas seulement ce à quoi il ressemble. Le design est comment ça marche.",
+            author: "Steve Jobs",
+            role: "Co-fondateur d'Apple",
+            image: null,
+            ratio: '1:1',
+            theme: {
+                bg: 'bg-white',
+                text: 'text-gray-900',
+                isGradient: false,
+                gradientCss: ''
+            }
+        };
+
+        const els = {
+            sidebar: document.getElementById('sidebar'),
+            main: document.getElementById('main-preview'),
+            inputs: {
+                quote: document.getElementById('input-quote'),
+                author: document.getElementById('input-author'),
+                role: document.getElementById('input-role'),
+                image: document.getElementById('input-image'),
+            },
+            displays: {
+                quote: document.getElementById('display-quote'),
+                author: document.getElementById('display-author'),
+                role: document.getElementById('display-role'),
+                image: document.getElementById('display-image'),
+                placeholder: document.getElementById('image-placeholder'),
+                card: document.getElementById('quote-card'),
+                container: document.getElementById('preview-container')
+            },
+            controls: {
+                removeImg: document.getElementById('btn-remove-image'),
+                downloadMobile: document.getElementById('btn-download-mobile'),
+                ratio11: document.getElementById('ratio-1-1'),
+                ratio916: document.getElementById('ratio-9-16'),
+                themes: document.querySelectorAll('#theme-selector button')
+            },
+            toast: document.getElementById('toast')
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadState();
+            bindEvents();
+            render();
+            
+            // Check Mobile View State
+            if(window.innerWidth < 768) {
+                showEditor(); // Default to editor on mobile
+            }
+        });
+
+        // --- Navigation Mobile ---
+        function showPreview() {
+            // Sur mobile, on cache la sidebar et montre le main
+            if (window.innerWidth < 768) {
+                els.sidebar.classList.add('hidden');
+                els.main.classList.remove('hidden');
+                els.main.classList.add('flex');
+            }
+        }
+
+        function showEditor() {
+            // Sur mobile, on cache le main et montre la sidebar
+            if (window.innerWidth < 768) {
+                els.main.classList.add('hidden');
+                els.main.classList.remove('flex');
+                els.sidebar.classList.remove('hidden');
+            }
+        }
+
+        function bindEvents() {
+            ['quote', 'author', 'role'].forEach(key => {
+                els.inputs[key].addEventListener('input', (e) => {
+                    state[key] = e.target.value;
+                    saveState();
+                    render();
+                });
+            });
+
+            els.inputs.image.addEventListener('change', handleImageUpload);
+            els.controls.removeImg.addEventListener('click', () => {
+                state.image = null;
+                saveState();
+                render();
+                showToast("Image supprimée");
+            });
+
+            els.controls.themes.forEach(btn => {
+                btn.addEventListener('click', () => applyTheme(btn));
+            });
+        }
+
+        function setRatio(ratio) {
+            state.ratio = ratio;
+            
+            if(ratio === '1:1') {
+                els.controls.ratio11.className = "py-2 rounded-md text-xs font-bold transition-colors bg-white shadow-sm text-gray-900";
+                els.controls.ratio916.className = "py-2 rounded-md text-xs font-bold transition-colors text-gray-500 hover:text-gray-900";
+                els.displays.container.classList.remove('aspect-[9/16]');
+                els.displays.container.classList.add('aspect-square');
+            } else {
+                els.controls.ratio11.className = "py-2 rounded-md text-xs font-bold transition-colors text-gray-500 hover:text-gray-900";
+                els.controls.ratio916.className = "py-2 rounded-md text-xs font-bold transition-colors bg-white shadow-sm text-gray-900";
+                els.displays.container.classList.remove('aspect-square');
+                els.displays.container.classList.add('aspect-[9/16]');
+            }
+            saveState();
+        }
+
+        function applyTheme(btn) {
+            const bg = btn.getAttribute('data-bg');
+            const txt = btn.getAttribute('data-text');
+            
+            els.controls.themes.forEach(b => b.classList.remove('ring-2', 'ring-brand-500', 'ring-offset-1'));
+            btn.classList.add('ring-2', 'ring-brand-500', 'ring-offset-1');
+
+            state.theme = {
+                bg: bg.startsWith('gradient') ? 'transparent' : `bg-${bg}`,
+                text: `text-${txt}`,
+                isGradient: bg.startsWith('gradient')
+            };
+
+            if (state.theme.isGradient) {
+                if (bg === 'gradient-purple') state.theme.gradientCss = 'linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)';
+                if (bg === 'gradient-sunset') state.theme.gradientCss = 'linear-gradient(135deg, #fb923c 0%, #f43f5e 100%)';
+            } else {
+                state.theme.gradientCss = '';
+            }
+
+            saveState();
+            render();
+        }
+
+        function render() {
+            els.displays.quote.innerText = state.quote || "Votre citation...";
+            els.displays.author.innerText = state.author || "Auteur";
+            els.displays.role.innerText = state.role || "Fonction";
+            
+            els.inputs.quote.value = state.quote;
+            els.inputs.author.value = state.author;
+            els.inputs.role.value = state.role;
+
+            if (state.image) {
+                els.displays.image.src = state.image;
+                els.displays.image.classList.remove('hidden');
+                els.displays.placeholder.classList.add('hidden');
+                els.controls.removeImg.classList.remove('hidden');
+            } else {
+                els.displays.image.src = "";
+                els.displays.image.classList.add('hidden');
+                els.displays.placeholder.classList.remove('hidden');
+                els.controls.removeImg.classList.add('hidden');
+            }
+
+            const card = els.displays.card;
+            card.className = `flex flex-col justify-between relative overflow-hidden transition-all duration-300 ${state.theme.text}`;
+            
+            if (state.theme.isGradient) {
+                card.style.background = state.theme.gradientCss;
+            } else {
+                card.style.background = '';
+                card.classList.add(state.theme.bg);
+            }
+
+            if(state.ratio === '9:16' && !els.displays.container.classList.contains('aspect-[9/16]')) setRatio('9:16');
+        }
+
+        function handleImageUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const maxSize = 800;
+                    let w = img.width, h = img.height;
+                    if (w > h) { if (w > maxSize) { h *= maxSize / w; w = maxSize; } }
+                    else { if (h > maxSize) { w *= maxSize / h; h = maxSize; } }
+                    canvas.width = w; canvas.height = h;
+                    ctx.drawImage(img, 0, 0, w, h);
+                    state.image = canvas.toDataURL('image/jpeg', 0.85);
+                    saveState();
+                    render();
+                    showToast("Image ajoutée");
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function downloadHD() {
+            const btn = window.innerWidth < 768 ? els.controls.downloadMobile : document.querySelector('button[onclick="downloadHD()"]');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Génération...`;
+            btn.disabled = true;
+
+            try {
+                const width = CONFIG.exportWidth;
+                const height = state.ratio === '1:1' ? width : Math.round(width * (16/9));
+
+                const exportContainer = document.createElement('div');
+                exportContainer.style.position = 'fixed';
+                exportContainer.style.top = '-9999px';
+                exportContainer.style.left = '-9999px';
+                exportContainer.style.width = width + 'px';
+                exportContainer.style.height = height + 'px';
+                exportContainer.style.fontSize = '42px'; 
+                exportContainer.style.zIndex = '9999';
+
+                const clone = els.displays.card.cloneNode(true);
+                clone.style.width = '100%';
+                clone.style.height = '100%';
+                
+                const style = document.createElement('style');
+                style.innerHTML = `.export-fix * { border-width: 3px !important; } .export-fix i { font-size: 1em !important; }`;
+                clone.classList.add('export-fix');
+
+                exportContainer.appendChild(clone);
+                document.body.appendChild(exportContainer);
+
+                const canvas = await html2canvas(exportContainer, {
+                    scale: 1, useCORS: true, backgroundColor: null, logging: false
+                });
+
+                const link = document.createElement('a');
+                link.download = `citation-${state.author.replace(/\s+/g, '-').toLowerCase()}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+
+                document.body.removeChild(exportContainer);
+                showToast("Téléchargement HD terminé !");
+
+            } catch (err) {
+                console.error(err);
+                showToast("Erreur lors de l'export.");
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        function saveState() { localStorage.setItem(CONFIG.storageKey, JSON.stringify(state)); }
+        function loadState() {
+            const saved = localStorage.getItem(CONFIG.storageKey);
+            if (saved) {
+                try { state = { ...state, ...JSON.parse(saved) }; } catch (e) {}
+            }
+        }
+        function showToast(msg) {
+            els.toast.innerText = msg;
+            els.toast.classList.add('show');
+            setTimeout(() => els.toast.classList.remove('show'), 3000);
+        }
+    </script>
+</body>
+</html>
