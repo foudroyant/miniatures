@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV - Stéphane BAZEBIBOUTA BAMBY</title>
+    <!-- Importation d'une police moderne (Inter) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Utilisation de FontAwesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- VARIABLES & RESET --- */
+        :root {
+            --primary-color: #2c3e50; /* Bleu nuit élégant */
+            --accent-color: #3498db;  /* Bleu vif pour les liens/points */
+            --text-color: #333333;
+            --light-text: #666666;
+            --bg-color: #f4f4f9;
+            --section-spacing: 18px; /* Espacement réduit pour marges 1cm */
+            --item-spacing: 10px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #e0e0e0; /* Gris hors page A4 */
+            font-size: 11px; /* Taille police adaptée pour A4 */
+            color: var(--text-color);
+            line-height: 1.3; /* Ligne un peu plus serrée */
+            display: flex;
+            justify-content: center;
+            padding: 20px 0;
+            -webkit-print-color-adjust: exact; /* Force l'impression des couleurs de fond */
+        }
+
+        /* --- MISE EN PAGE A4 AVEC MARGES --- */
+        .page-container {
+            /* Dimensions A4 standards : 210mm x 297mm */
+            width: 210mm;
+            min-height: 297mm;
+            
+            /* Marges de 1cm intégrées au conteneur (padding) */
+            padding: 1cm; 
+            
+            background: white;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* --- HEADER --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .header-content h1 {
+            font-size: 20px; /* Légèrement réduit pour tenir avec le nom long */
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+            line-height: 1.2;
+        }
+
+        .header-content h2 {
+            font-size: 13px;
+            color: var(--accent-color);
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .contact-info {
+            text-align: right;
+            font-size: 10px;
+            color: var(--light-text);
+        }
+
+        .contact-item {
+            margin-bottom: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 6px;
+        }
+
+        .contact-item i {
+            color: var(--accent-color);
+            width: 10px;
+        }
+
+        .contact-item a {
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+        .profile-photo {
+            width: 80px; /* Photo légèrement plus petite */
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent-color);
+            margin-left: 15px;
+        }
+
+        /* --- GRILLE PRINCIPALE --- */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr; /* Colonne gauche plus large */
+            gap: 30px; /* Espace entre colonnes */
+        }
+
+        /* --- SECTIONS GÉNÉRALES --- */
+        section {
+            margin-bottom: var(--section-spacing);
+        }
+
+        h3.section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--primary-color);
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 4px;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        h3.section-title i {
+            color: var(--accent-color);
+            font-size: 10px;
+        }
+
+        p {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+
+        /* --- PROFIL --- */
+        .profile-text {
+            color: var(--light-text);
+            font-size: 10px;
+        }
+
+        /* --- EXPÉRIENCES (Colonne Gauche) --- */
+        .job-item {
+            margin-bottom: 12px;
+        }
+        
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 2px;
+        }
+
+        .job-title {
+            font-weight: 700;
+            font-size: 10px;
+            color: var(--primary-color);
+        }
+
+        .job-company {
+            font-weight: 600;
+            color: #555;
+            font-size: 9px;
+        }
+        
+        .job-date {
+            font-size: 8px;
+            color: var(--light-text);
+            font-style: italic;
+        }
+
+        .job-desc {
+            font-size: 9px;
+            color: #444;
+            margin-bottom: 6px;
+        }
+
+        .project-link {
+            display: inline-block;
+            font-size: 8px;
+            color: var(--accent-color);
+            text-decoration: none;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        /* --- COMPÉTENCES (Colonne Droite) --- */
+        .skills-list {
+            list-style: none;
+        }
+
+        .skill-category {
+            margin-bottom: 12px;
+        }
+
+        .skill-category h4 {
+            font-size: 9px;
+            color: var(--primary-color);
+            margin-bottom: 4px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .skill-category ul {
+            padding-left: 10px;
+            list-style-type: square;
+        }
+
+        .skill-category li {
+            font-size: 9px;
+            margin-bottom: 3px;
+            color: #444;
+        }
+
+        /* --- FORMATION --- */
+        .edu-item {
+            margin-bottom: 10px;
+        }
+
+        .edu-degree {
+            font-weight: 700;
+            font-size: 9px;
+        }
+
+        .edu-school {
+            font-style: italic;
+            font-size: 9px;
+            color: #555;
+        }
+
+        .edu-date {
+            font-size: 8px;
+            color: var(--light-text);
+        }
+
+        /* --- LANGUES --- */
+        .lang-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 9px;
+            margin-bottom: 4px;
+        }
+
+        /* --- STYLE IMPRESSION (CRUCIAL POUR A4 ET MARGES) --- */
+        @media print {
+            @page {
+                size: A4;
+                margin: 1cm; /* Force 1cm de marge physique sur le papier */
+            }
+            body {
+                background: none;
+                padding: 0;
+                width: 100%;
+            }
+            .page-container {
+                box-shadow: none;
+                margin: 0;
+                width: 100%; /* Prend toute la zone d'impression (déjà délimitée par @page margin) */
+                min-height: 100%;
+                padding: 0; /* On retire le padding car @page s'en occupe */
+                border: none;
+            }
+            /* Assure que les liens s'impriment lisiblement */
+            a {
+                text-decoration: none;
+                color: var(--text-color);
+            }
+        }
+
+        /* --- RESPONSIVE --- */
+        @media screen and (max-width: 800px) {
+            .page-container {
+                width: 100%;
+                height: auto;
+                padding: 20px; /* Plus de padding sur mobile */
+            }
+            header {
+                flex-direction: column-reverse;
+                text-align: center;
+                gap: 15px;
+            }
+            .contact-info {
+                text-align: center;
+                justify-content: center;
+            }
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-container">
+        <!-- HEADER -->
+        <header>
+            <div class="header-content">
+                <h1>Stéphane BAZEBIBOUTA BAMBY</h1>
+                <h2>Développeur Fullstack Web & Mobile</h2>
+                
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fa-solid fa-phone"></i>
+                        <span>+242 06 483 76 37 / 05 512 78 75</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fa-solid fa-envelope"></i>
+                        <a href="mailto:Stephanebazebibouta@gmail.com">Stephanebazebibouta@gmail.com</a>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>Ouesso, Congo</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fa-brands fa-linkedin"></i>
+                        <a href="https://www.linkedin.com/in/stephane-bazebibouta-17665b332/" target="_blank">linkedin.com/in/stephane-bazebibouta</a>
+                    </div>
+                </div>
+            </div>
+            <img src="https://ik.imagekit.io/bambyno/Mes%20assets%20perso/IMG_20220306_075350.jpg" alt="Photo Stéphane Bazebibouta" class="profile-photo">
+        </header>
+
+        <!-- CONTENU PRINCIPAL -->
+        <div class="main-grid">
+            
+            <!-- COLONNE GAUCHE -->
+            <div class="left-col">
+                
+                <!-- Profil -->
+                <section>
+                    <h3 class="section-title"><i class="fa-solid fa-user"></i> Profil</h3>
+                    <div class="profile-text">
+                        <p>Développeur Fullstack web & mobile, je conçois des solutions logicielles performantes et j’accompagne les entreprises dans leur transformation digitale en utilisant des technologies modernes.</p>
+                        <p>Spécialisé dans la création de plateformes digitales, SaaS et outils automatisés, j’intègre également des solutions d’intelligence artificielle pour optimiser les processus et créer des produits innovants à forte valeur ajoutée.</p>
+                    </div>
+                </section>
+
+                <!-- Expériences -->
+                <section>
+                    <h3 class="section-title"><i class="fa-solid fa-briefcase"></i> Expériences</h3>
+                    
+                    <div class="job-item">
+                        <div class="job-header">
+                            <span class="job-title">Développeur Fullstack – Projets & Freelance</span>
+                        </div>
+                        
+                        <!-- Sous-projet : Media Chétien -->
+                        <div class="sub-job">
+                            <div class="job-header">
+                                <span class="job-company">Fondateur – Media Chétien</span>
+                            </div>
+                            <p class="job-desc">Conception et développement d’une plateforme digitale dédiée aux contenus chrétiens.</p>
+                            <a href="https://www.mediachretien.com" target="_blank" class="project-link"><i class="fa-solid fa-globe"></i> www.mediachretien.com</a>
+                        </div>
+
+                        <!-- Sous-projet : Touss Magazine -->
+                        <div class="sub-job" style="margin-top: 6px;">
+                            <div class="job-header">
+                                <span class="job-company">Touss Magazine</span>
+                            </div>
+                            <p class="job-desc">Développement d’un magazine digital axé sur la culture africaine.</p>
+                            <a href="https://www.toussmagazine.com" target="_blank" class="project-link"><i class="fa-solid fa-globe"></i> www.toussmagazine.com</a>
+                        </div>
+
+                        <!-- Sous-projet : BMGKV -->
+                        <div class="sub-job" style="margin-top: 6px;">
+                            <div class="job-header">
+                                <span class="job-company">BMGKV</span>
+                            </div>
+                            <p class="job-desc">Création du site web d’une entreprise de soudure industrielle au Congo.</p>
+                            <a href="https://www.bmgkv.com" target="_blank" class="project-link"><i class="fa-solid fa-globe"></i> www.bmgkv.com</a>
+                        </div>
+
+                         <!-- Sous-projet : Prefalerte -->
+                         <div class="sub-job" style="margin-top: 6px;">
+                            <div class="job-header">
+                                <span class="job-company">Prefalerte</span>
+                            </div>
+                            <p class="job-desc">Développement d’une plateforme intelligente de notification de créneaux administratifs.</p>
+                            <a href="https://www.prefalerte.com" target="_blank" class="project-link"><i class="fa-solid fa-globe"></i> www.prefalerte.com</a>
+                        </div>
+
+                        <!-- Sous-projet : Lane AI -->
+                        <div class="sub-job" style="margin-top: 6px;">
+                            <div class="job-header">
+                                <span class="job-company">Lane AI (2025)</span>
+                            </div>
+                            <p class="job-desc">Partenaire technique d’une entreprise française spécialisée en intelligence artificielle.</p>
+                            <a href="https://www.laneai.fr" target="_blank" class="project-link"><i class="fa-solid fa-globe"></i> www.laneai.fr</a>
+                        </div>
+
+                        <!-- Sous-projet : Chatbots -->
+                        <div class="sub-job" style="margin-top: 6px;">
+                            <div class="job-header">
+                                <span class="job-company">Développement de Chatbots</span>
+                            </div>
+                            <p class="job-desc">Conception de chatbots automatisés (Telegram, WhatsApp…) pour la gestion de services et l’interaction utilisateur.</p>
+                        </div>
+
+                        <!-- Sous-projet : Apps -->
+                        <div class="sub-job" style="margin-top: 6px;">
+                            <div class="job-header">
+                                <span class="job-company">Applications Web & Mobile</span>
+                            </div>
+                            <p class="job-desc">Développement de solutions digitales sur mesure (gestion, automatisation, plateformes interactives).</p>
+                        </div>
+                    </div>
+
+                </section>
+            </div>
+
+            <!-- COLONNE DROITE -->
+            <div class="right-col">
+                
+                <!-- Compétences -->
+                <section>
+                    <h3 class="section-title"><i class="fa-solid fa-screwdriver-wrench"></i> Compétences</h3>
+                    <div class="skills-list">
+                        
+                        <div class="skill-category">
+                            <h4><i class="fa-solid fa-code"></i> Développement</h4>
+                            <ul>
+                                <li>HTML, CSS & JavaScript</li>
+                                <li>Python et autres technologies backend</li>
+                                <li>React, Next.js et autres frameworks modernes</li>
+                            </ul>
+                        </div>
+
+                        <div class="skill-category">
+                            <h4><i class="fa-solid fa-box-open"></i> Produits & SaaS</h4>
+                            <ul>
+                                <li>Création de plateformes SaaS</li>
+                                <li>Conception de solutions digitales sur mesure</li>
+                            </ul>
+                        </div>
+
+                        <div class="skill-category">
+                            <h4><i class="fa-solid fa-robot"></i> Automatisation & IA</h4>
+                            <ul>
+                                <li>Intégration d’outils d’intelligence artificielle</li>
+                                <li>Automatisation de processus métiers</li>
+                                <li>Création de chatbots intelligents</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- Formation -->
+                <section>
+                    <h3 class="section-title"><i class="fa-solid fa-graduation-cap"></i> Formation</h3>
+                    
+                    <div class="edu-item">
+                        <div class="edu-degree">Licence professionnelle en informatique</div>
+                        <div class="edu-school">Faculté des Sciences et Techniques</div>
+                        <div class="edu-school">Université Marien Ngouabi</div>
+                        <div class="edu-date">2018 – 2019</div>
+                    </div>
+
+                    <div class="edu-item">
+                        <div class="edu-degree">Baccalauréat Série C</div>
+                        <div class="edu-school">Lycée Louis Grégory</div>
+                        <div class="edu-date">2013 – 2014</div>
+                    </div>
+                </section>
+
+                <!-- Langues -->
+                <section>
+                    <h3 class="section-title"><i class="fa-solid fa-language"></i> Langues</h3>
+                    <div class="lang-item">
+                        <span>Français</span>
+                        <span style="color: var(--accent-color); font-weight: bold;">Courant</span>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
